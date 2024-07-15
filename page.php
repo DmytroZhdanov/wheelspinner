@@ -15,7 +15,7 @@ Template Post Type: page
 </head>
 
 <body>
-
+  <h1>Hello</h1>
 </body>
 
 </html>
