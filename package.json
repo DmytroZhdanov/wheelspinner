@@ -2,10 +2,32 @@
   "name": "wheelspinner",
   "version": "1.0.0",
   "main": "index.js",
+  "description": "Test task",
+  "exports": "./gulpfile.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp"
   },
   "author": "Dmytro Zhdanov",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "@babel/preset-env": "^7.24.8",
+    "modern-normalize": "^2.0.0",
+    "reset-css": "^5.0.2"
+  },
+  "devDependencies": {
+    "cssnano": "^7.0.4",
+    "gulp": "^5.0.0",
+    "gulp-autoprefixer": "^9.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^10.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-uglify-es": "^3.0.0",
+    "merge2": "^1.4.1",
+    "sass": "^1.77.7"
+  }
 }
