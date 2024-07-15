@@ -1,0 +1,135 @@
+@import "./variables";
+
+/* Common styles */
+body {
+  font-family: "Poppins", sans-serif;
+
+  color: $text_primary;
+  background: linear-gradient(45deg, #ff6b6b, #ff9e9e, #feca57, #ff6b6b);
+}
+
+main {
+  width: 100vw;
+  height: 100vh;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+.disabled_scroll {
+  overflow: hidden;
+}
+
+.wheel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 80vw;
+  height: 80vw;
+
+  border-radius: 50%;
+
+  background-color: gray;
+}
+
+.push_btn {
+  position: relative;
+
+  width: 100px;
+  height: 100px;
+
+  border-radius: 50%;
+  border: 2px solid white;
+
+  cursor: pointer;
+
+  transition: font-size $transition_dur_and_func;
+}
+
+.push_btn:hover {
+  font-size: 20px;
+}
+
+.push_btn::before {
+  content: "^";
+
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: 28px;
+
+  color: white;
+}
+
+.options_list {
+  margin-bottom: 20px;
+
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.option_item {
+  padding: 15px 20px;
+
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.option_item:last-child {
+  border-bottom: none;
+}
+
+.option_item:not(:last-child) {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.add_option_container {
+  display: flex;
+  gap: 10px;
+}
+
+.new_option {
+  padding: 10px;
+
+  border: 2px solid #ff6b6b;
+  border-radius: 5px;
+  transition: border-color $transition_dur_and_func;
+}
+
+.new_option:focus {
+  border-color: #388e3c;
+  outline: none;
+}
+
+.add_option_btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #ff6b6b;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add_option_btn:hover {
+  background-color: #388e3c;
+}
+
+@media screen and (min-width: 768px) {
+  .main_container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .wheel {
+    width: 40vw;
+    height: 40vw;
+  }
+}
