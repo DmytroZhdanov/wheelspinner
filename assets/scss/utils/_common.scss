@@ -22,7 +22,13 @@ a {
   overflow: hidden;
 }
 
+.wheel_container {
+  position: relative;
+}
+
 .wheel {
+  position: relative;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,11 +38,47 @@ a {
 
   border-radius: 50%;
 
+  // transform: rotate(36deg);
+  background: conic-gradient(
+    #ff5733 0%,
+    #ff5733 20%,
+    #33c1ff 20%,
+    #33c1ff 40%,
+    #75ff33 40%,
+    #75ff33 60%,
+    #ff33c1 60%,
+    #ff33c1 80%,
+    #0f511a 80%,
+    #0f511a 100%
+  );
   background-color: gray;
+
+  animation-name: spin;
+  animation-duration: 40s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.sector_label {
+  position: absolute;
+  left: 50%;
+
+  width: 50%;
+
+  font-size: 28px;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+  transform-origin: center left;
+  transform: rotate(20deg);
 }
 
 .push_btn {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   width: 100px;
   height: 100px;
@@ -75,14 +117,13 @@ a {
   overflow: hidden;
 }
 
-.option_item {
+.option_item_input {
   padding: 15px 20px;
-
-  border-bottom: 1px solid #f0f0f0;
+  border: none;
 }
 
-.option_item:last-child {
-  border-bottom: none;
+.option_item_input:focus {
+  outline: none;
 }
 
 .option_item:not(:last-child) {
@@ -94,7 +135,7 @@ a {
   gap: 10px;
 }
 
-.new_option {
+.new_option_input {
   padding: 10px;
 
   border: 2px solid #ff6b6b;
@@ -102,7 +143,7 @@ a {
   transition: border-color $transition_dur_and_func;
 }
 
-.new_option:focus {
+.new_option_input:focus {
   border-color: #388e3c;
   outline: none;
 }
@@ -131,5 +172,15 @@ a {
   .wheel {
     width: 40vw;
     height: 40vw;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(36deg);
+  }
+
+  100% {
+    transform: rotate(396deg);
   }
 }
