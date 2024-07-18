@@ -10,7 +10,7 @@ body {
 
 main {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 a {
@@ -22,8 +22,21 @@ a {
   overflow: hidden;
 }
 
+.title {
+  margin-bottom: 40px;
+  padding: 20px;
+
+  font-weight: 600;
+  font-size: 32px;
+  text-align: center;
+}
+
 .wheel_container {
   position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .wheel {
@@ -37,6 +50,8 @@ a {
   height: 80vw;
 
   border-radius: 50%;
+  border: 2px solid white; /* Тонкий бордер з напівпрозорого чорного */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1); /* Подвійна тінь для обʼємного ефекту */
 
   background: conic-gradient(
     #ff5733 0%,
@@ -51,10 +66,9 @@ a {
     #0f511a 100%
   );
 
-  animation-name: spin;
-  animation-duration: 40s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+  animation: lazySpin 40s linear infinite;
+
+  transition: transform 6000ms ease-in-out;
 }
 
 .sector_label {
@@ -62,9 +76,10 @@ a {
   left: 50%;
 
   width: 50%;
+  padding-right: 8%;
 
-  font-size: 28px;
-  text-align: center;
+  font-size: clamp(12px, 100%, 28px);
+  text-align: right;
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 
@@ -78,8 +93,10 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 100px;
-  height: 100px;
+  width: 20vw;
+  height: 20vw;
+  max-width: 100px;
+  max-height: 100px;
 
   border-radius: 50%;
   border: 2px solid white;
@@ -108,6 +125,7 @@ a {
 }
 
 .options_list {
+  max-width: 300px;
   margin-bottom: 20px;
 
   background: #ffffff;
@@ -189,6 +207,92 @@ a {
   background-color: #388e3c;
 }
 
+.result_dialog {
+  width: calc(100vw - 16px);
+  max-width: 400px;
+  padding: 20px;
+
+  font-size: 20px;
+
+  border: none;
+  border-radius: 8px;
+}
+
+.result_dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.result_dialog b {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.result_text_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 40px;
+}
+
+.copy_result_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 4px;
+
+  border: none;
+  background-color: transparent;
+
+  cursor: pointer;
+}
+
+.copy_icon {
+  width: 20px;
+  height: 20px;
+
+  transition: transform $transition_dur_and_func;
+}
+
+.copy_result_btn:is(:hover, :focus) {
+  outline: none;
+}
+
+.copy_result_btn:is(:hover, :focus) .copy_icon {
+  transform: scale(1.2);
+}
+
+.close_dialog_btn {
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 4px;
+
+  background-color: #007bff;
+  color: white;
+
+  cursor: pointer;
+
+  transition: background-color $transition_dur_and_func;
+}
+
+.close_dialog_btn:is(:hover, :focus) {
+  background-color: #0056b3;
+}
+
+@media screen and (max-width: 767px) {
+  .wheel_container {
+    margin-bottom: 40px;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 767px), (min-width: 1200px) {
+  .sector_label {
+    font-size: 28px;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .main_container {
     display: flex;
@@ -202,7 +306,7 @@ a {
   }
 }
 
-@keyframes spin {
+@keyframes lazySpin {
   0% {
     transform: rotate(36deg);
   }

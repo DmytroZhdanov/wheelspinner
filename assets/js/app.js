@@ -1,35 +1,5 @@
 const options_list = document.querySelector(".options_list");
 let options_count = options_list.childElementCount;
-// const options = options_list.childNodes.values();
-
-/**
- * Initial function. Generate and insert default options to html /
- * Función inicial. Generar e insertar opciones predeterminadas en html.
- */
-// TODO: Transfer to php
-// (() => {
-//   const options_container = document.querySelector(".options_container");
-//   const options_list = document.querySelector(".options_list");
-
-//   let markup_arr = [];
-
-//   for (let i = 0; i < options.length; i += 1) {
-//     markup_arr.push(
-//       `<li class="option_item"><input type="text" id="option_${
-//         i + 1
-//       }" class="option_item_input" value="${options[i]}" /></li>`
-//     );
-//   }
-
-//   if (options_list) {
-//     options_list.insertAdjacentHTML("afterbegin", markup_arr.join(""));
-//   } else {
-//     options_container.insertAdjacentHTML(
-//       "afterbegin",
-//       `<ul class="options_list">${markup_arr.join("")}</ul>`
-//     );
-//   }
-// })();
 
 /**
  * Function to add a new option /
@@ -111,6 +81,65 @@ let options_count = options_list.childElementCount;
   }
 })();
 
+/**
+ * Spin the wheel /
+ * Gira la rueda
+ */
+(() => {
+  const wheel = document.querySelector(".wheel");
+  const spin_btn = document.querySelector(".push_btn");
+  spin_btn.addEventListener("click", onSpinBtnClick);
+
+  function onSpinBtnClick() {
+    const options_list = document.getElementsByClassName("option_item_input");
+    const dialog = document.querySelector(".result_dialog");
+    const resultText = document.querySelector(".result_text");
+
+    let options_id_array = [];
+    for (const option of options_list) {
+      options_id_array.push(option.id);
+    }
+
+    const selected_option_id = getRandomOption(options_id_array);
+    const selected_option_text = document.getElementById(selected_option_id).value;
+
+    // Calculate initial angle before spin
+    const computed_style = window.getComputedStyle(wheel);
+    const matrix = computed_style.transform;
+    const initial_angle = getRotationAngle(matrix);
+
+    // Calculate terminal angle after spin to stop on selected option
+    const step = 360 / options_id_array.length;
+    const splitted_id = selected_option_id.split("_");
+    const order = splitted_id[splitted_id.length - 1];
+    const terminal_angle = 3600 + step / 2 - step * order + step;
+
+    // Set up initial styles before spin
+    wheel.style.animation = "none";
+    wheel.style.transform = `rotate(${initial_angle}deg)`;
+
+    // Start spin
+    setTimeout(() => {
+      wheel.style.transform = `rotate(${terminal_angle}deg)`;
+    }, 0);
+
+    // After spin
+    setTimeout(() => {
+      // Show results
+      resultText.innerHTML = `Result: <b>${selected_option_text}</b>`;
+      dialog.showModal();
+      dialog.addEventListener("click", onDialogClick);
+
+      // Reset styles
+      wheel.style.transition = "none";
+      wheel.style.transform = `rotate(${step / 2 - step * order + step}deg)`;
+    }, 6300);
+    setTimeout(() => {
+      wheel.style.transition = "";
+    }, 0);
+  }
+})();
+
 function generateWheelSections() {
   const options_array = document.getElementsByClassName("option_item_input");
   const wheel = document.querySelector(".wheel");
@@ -161,4 +190,67 @@ function deleteOption(id) {
   option_item.remove();
 
   generateWheelSections();
+}
+
+function getRandomOption(options_id_array) {
+  return options_id_array[Math.round(Math.random() * (options_id_array.length - 1))];
+}
+
+function getRotationAngle(matrix) {
+  const values = matrix.split("(")[1].split(")")[0].split(",");
+  const a = values[0];
+  const b = values[1];
+  const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+
+  return angle >= 0 ? angle : angle + 360;
+}
+
+function onDialogClick(e) {
+  e.stopPropagation();
+
+  const targetId = e.target.id;
+
+  if (targetId === "copy_result_btn" || targetId === "copy_result_icon") {
+    copyToClipboard();
+  }
+
+  if (targetId === "close_dialog_btn") {
+    closeDialog();
+  }
+}
+
+function closeDialog() {
+  const dialog = document.querySelector(".result_dialog");
+  const wheel = document.querySelector(".wheel");
+
+  dialog.close();
+
+  wheel.style.animation = "lazySpin 40s linear infinite";
+}
+
+async function copyToClipboard() {
+  const result = document.querySelector(".result_text").innerText;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    // If clipboard is not blocked / Si el portapapeles no está bloqueado
+    await navigator.clipboard.writeText(result);
+  } else {
+    // If clipboard is blocked / Si el portapapeles está bloqueado
+    const textArea = document.createElement("textarea");
+    textArea.value = result;
+
+    textArea.style.position = "absolute";
+    textArea.style.left = "-999999px";
+
+    document.body.prepend(textArea);
+    textArea.select();
+
+    try {
+      document.execCommand("copy");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      textArea.remove();
+    }
+  }
 }
