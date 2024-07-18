@@ -1,0 +1,90 @@
+@import "../utils/variables";
+
+/* ---------------------------------------------------------------------------
+Options list styles
+-----------------------------------------------------------------------------*/
+.options_list {
+  max-width: 300px;
+  margin-bottom: 20px;
+
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.option_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option_item_input {
+  padding: 15px 20px;
+  border: none;
+}
+
+.option_item_input:focus {
+  outline: none;
+}
+
+.option_item:not(:last-child) {
+  border-bottom: 1px solid $gray;
+}
+
+.remove_icon {
+  width: 28px;
+  height: 28px;
+}
+
+.remove_icon_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+  border: none;
+
+  transition: transform $transition_dur_and_func;
+}
+
+.remove_icon_btn:is(:hover, :focus) {
+  outline: none;
+
+  transform: scale(1.2);
+}
+
+.add_option_container {
+  display: flex;
+  gap: 10px;
+}
+
+.new_option_input {
+  padding: 10px;
+
+  border: 2px solid $option_primary;
+  border-radius: 5px;
+
+  transition: border-color $transition_dur_and_func;
+}
+
+.new_option_input:focus {
+  border-color: $option_hover;
+  outline: none;
+}
+
+.add_option_btn {
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 5px;
+
+  color: white;
+  background-color: $option_primary;
+  cursor: pointer;
+
+  transition: background-color 0.3s;
+}
+
+.add_option_btn:is(:hover, :focus) {
+  background-color: $option_hover;
+}

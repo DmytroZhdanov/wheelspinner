@@ -1,0 +1,128 @@
+@import "../utils/variables";
+
+/* ---------------------------------------------------------------------------
+Wheel styles
+-----------------------------------------------------------------------------*/
+.wheel_container {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wheel {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 80vw;
+  height: 80vw;
+
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  background: conic-gradient(
+    #ff5733 0%,
+    #ff5733 20%,
+    #33c1ff 20%,
+    #33c1ff 40%,
+    #75ff33 40%,
+    #75ff33 60%,
+    #ff33c1 60%,
+    #ff33c1 80%,
+    #0f511a 80%,
+    #0f511a 100%
+  );
+
+  overflow: hidden;
+
+  animation: lazySpin 40s linear infinite;
+
+  transition: transform 6000ms ease-in-out;
+}
+
+.sector_label {
+  position: absolute;
+  left: 50%;
+
+  width: 50%;
+  padding-right: 8%;
+
+  font-size: clamp(12px, 100%, 28px);
+  text-align: right;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+  transform-origin: center left;
+  transform: rotate(20deg);
+}
+
+.push_btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 20vw;
+  height: 20vw;
+  max-width: 100px;
+  max-height: 100px;
+
+  border-radius: 50%;
+  border: 2px solid white;
+
+  cursor: pointer;
+
+  transition: font-size $transition_dur_and_func;
+}
+
+.push_btn:is(:hover, :focus) {
+  outline: none;
+  font-size: 20px;
+}
+
+.push_btn::before {
+  content: "^";
+
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-size: 28px;
+
+  color: white;
+}
+
+@media screen and (max-width: 767px) {
+  .wheel_container {
+    margin-bottom: 40px;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 767px), (min-width: 1200px) {
+  .sector_label {
+    font-size: 28px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .wheel {
+    width: 40vw;
+    height: 40vw;
+  }
+}
+
+@keyframes lazySpin {
+  0% {
+    transform: rotate(36deg);
+  }
+
+  100% {
+    transform: rotate(396deg);
+  }
+}
