@@ -1,11 +1,6 @@
 const jsWatch = ["./assets/js/app.js"],
   jsFiles = ["./assets/js/app.js", "./assets/js/*.js", "!./assets/js/*.min.js"],
-  cssWatch = [
-    "./assets/scss/*.scss",
-    "./assets/scss/layout/*.scss",
-    "./assets/scss/utils/*.scss",
-    "./assets/scss/admin_menu/*.scss",
-  ],
+  cssWatch = ["./assets/scss/*.scss", "./assets/scss/layout/*.scss", "./assets/scss/utils/*.scss"],
   cssFiles = ["./assets/scss/app.scss"];
 
 // Initialize modules
