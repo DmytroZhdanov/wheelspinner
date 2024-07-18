@@ -38,7 +38,6 @@ a {
 
   border-radius: 50%;
 
-  // transform: rotate(36deg);
   background: conic-gradient(
     #ff5733 0%,
     #ff5733 20%,
@@ -51,7 +50,6 @@ a {
     #0f511a 80%,
     #0f511a 100%
   );
-  background-color: gray;
 
   animation-name: spin;
   animation-duration: 40s;
@@ -91,7 +89,8 @@ a {
   transition: font-size $transition_dur_and_func;
 }
 
-.push_btn:hover {
+.push_btn:is(:hover, :focus) {
+  outline: none;
   font-size: 20px;
 }
 
@@ -117,6 +116,12 @@ a {
   overflow: hidden;
 }
 
+.option_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .option_item_input {
   padding: 15px 20px;
   border: none;
@@ -128,6 +133,28 @@ a {
 
 .option_item:not(:last-child) {
   border-bottom: 1px solid #e0e0e0;
+}
+
+.remove_icon {
+  width: 28px;
+  height: 28px;
+}
+
+.remove_icon_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: transparent;
+  border: none;
+
+  transition: transform $transition_dur_and_func;
+}
+
+.remove_icon_btn:is(:hover, :focus) {
+  outline: none;
+
+  transform: scale(1.2);
 }
 
 .add_option_container {

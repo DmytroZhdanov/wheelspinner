@@ -31,11 +31,45 @@ Template Post Type: page
 
     <div class="options_container">
       <ul class="options_list">
-        <li class="option_item"><input type="text" id="option_1" class="option_item_input" value="Option 1" /></li>
-        <li class="option_item"><input type="text" id="option_2" class="option_item_input" value="Option 2" /></li>
-        <li class="option_item"><input type="text" id="option_3" class="option_item_input" value="Option 3" /></li>
-        <li class="option_item"><input type="text" id="option_4" class="option_item_input" value="Option 4" /></li>
-        <li class="option_item"><input type="text" id="option_5" class="option_item_input" value="Option 5" /></li>
+        <li class="option_item" id="option_item_1">
+          <input type="text" id="option_input_1" class="option_item_input" value="Option 1" />
+
+          <button type="button" id="remove_option_btn_1" class="remove_icon_btn">
+            <img id="remove_option_icon_1" src="<?php echo get_template_directory_uri(); ?>/assets/icons/remove_icon.svg" alt="delete" class="remove_icon">
+          </button>
+        </li>
+
+        <li class="option_item" id="option_item_2">
+          <input type="text" id="option_input_2" class="option_item_input" value="Option 2" />
+
+          <button type="button" id="remove_option_btn_2" class="remove_icon_btn">
+            <img id="remove_option_icon_2" src="<?php echo get_template_directory_uri(); ?>/assets/icons/remove_icon.svg" alt="delete" class="remove_icon">
+          </button>
+        </li>
+
+        <li class="option_item" id="option_item_3">
+          <input type="text" id="option_input_3" class="option_item_input" value="Option 3" />
+
+          <button type="button" id="remove_option_btn_3" class="remove_icon_btn">
+            <img id="remove_option_icon_3" src="<?php echo get_template_directory_uri(); ?>/assets/icons/remove_icon.svg" alt="delete" class="remove_icon">
+          </button>
+        </li>
+
+        <li class="option_item" id="option_item_4">
+          <input type="text" id="option_input_4" class="option_item_input" value="Option 4" />
+
+          <button type="button" id="remove_option_btn_4" class="remove_icon_btn">
+            <img id="remove_option_icon_4" src="<?php echo get_template_directory_uri(); ?>/assets/icons/remove_icon.svg" alt="delete" class="remove_icon">
+          </button>
+        </li>
+
+        <li class="option_item" id="option_item_5">
+          <input type="text" id="option_input_5" class="option_item_input" value="Option 5" />
+
+          <button type="button" id="remove_option_btn_5" class="remove_icon_btn">
+            <img id="remove_option_icon_5" src="<?php echo get_template_directory_uri(); ?>/assets/icons/remove_icon.svg" alt="delete" class="remove_icon">
+          </button>
+        </li>
       </ul>
 
       <div class="add_option">
