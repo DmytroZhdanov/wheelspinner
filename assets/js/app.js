@@ -1,30 +1,41 @@
-const options_list = document.querySelector(".options_list");
-let options_count = options_list.childElementCount;
+import {
+  copyResultToClipboard,
+  deleteOption,
+  generateWheelSections,
+  getRandomOption,
+  getRotationAngle,
+} from "./functions";
 
-/**
- * Function to add a new option /
- * Función para agregar una nueva opción.
- */
 (() => {
-  const options_list = document.querySelector(".options_list");
-  const add_option_btn = document.querySelector(".add_option_btn");
+  const addOptionBtn = document.querySelector(".add_option_btn");
+  const optionsUl = document.querySelector(".options_list");
+  const wheelDiv = document.querySelector(".wheel");
+  const spinBtn = document.querySelector(".push_btn");
+  const dialog = document.querySelector(".result_dialog");
+  const resultTextP = document.querySelector(".result_text");
 
-  add_option_btn.addEventListener("click", onAddOptionBtnClick);
+  addOptionBtn.addEventListener("click", onAddOptionBtnClick);
+  optionsUl.addEventListener("input", onInput);
+  optionsUl.addEventListener("click", onRemoveBtnClick);
+  spinBtn.addEventListener("click", onSpinBtnClick);
+  dialog.addEventListener("click", onDialogClick);
 
-  function onAddOptionBtnClick() {
-    const new_option_input = document.querySelector(".new_option_input");
-    const new_option_text = new_option_input.value;
+  function onAddOptionBtnClick(e) {
+    e.stopPropagation();
 
-    if (new_option_text.trim() !== "") {
-      options_count += 1;
+    const newOptionInput = document.querySelector(".new_option_input");
+    const newOptionText = newOptionInput.value;
 
-      options_list.insertAdjacentHTML(
+    if (newOptionText.trim() !== "") {
+      const optionsCount = optionsUl.childElementCount + 1;
+
+      optionsUl.insertAdjacentHTML(
         "beforeend",
-        `<li class="option_item" id="option_item_${options_count}">
-          <input type="text" id="option_input_${options_count}" class="option_item_input" value="${new_option_text}" />
+        `<li class="option_item" id="option_item_${optionsCount}">
+          <input type="text" id="option_input_${optionsCount}" class="option_item_input" value="${newOptionText}" />
 
-          <button type="button" id="remove_option_btn_${options_count}" class="remove_icon_btn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="#d32f2f" viewBox="0 0 32 32" id="remove_option_icon_${options_count}" class="remove_icon">
+          <button type="button" id="remove_option_btn_${optionsCount}" class="remove_icon_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="#d32f2f" viewBox="0 0 32 32" id="remove_option_icon_${optionsCount}" class="remove_icon">
               <path d="M4 10v20c0 1.1 0.9 2 2 2h18c1.1 0 2-0.9 2-2v-20h-22zM10 28h-2v-14h2v14zM14 28h-2v-14h2v14zM18 28h-2v-14h2v14zM22 28h-2v-14h2v14z"></path>
               <path d="M26.5 4h-6.5v-2.5c0-0.825-0.675-1.5-1.5-1.5h-7c-0.825 0-1.5 0.675-1.5 1.5v2.5h-6.5c-0.825 0-1.5 0.675-1.5 1.5v2.5h26v-2.5c0-0.825-0.675-1.5-1.5-1.5zM18 4h-6v-1.975h6v1.975z"></path>
             </svg>
@@ -32,225 +43,254 @@ let options_count = options_list.childElementCount;
         </li>`
       );
 
-      new_option_input.value = "";
+      newOptionInput.value = "";
 
-      generateWheelSections();
+      generateWheelSections(wheelDiv);
     }
   }
-})();
-
-/**
- * Track input change /
- * Seguimiento del cambio de entrada
- */
-(() => {
-  const options_list = document.querySelector(".options_list");
-
-  options_list.addEventListener("input", onInput);
 
   function onInput(e) {
     const { id, value } = e.target;
-    const splitted_id = id.split("_");
-    const input_id = splitted_id[splitted_id.length - 1];
-    const label_to_change = document.getElementById(`label_${input_id}`);
-    label_to_change.innerText = value;
+    const splittedId = id.split("_");
+    const optionOrder = splittedId[splittedId.length - 1];
+    const labelToChange = document.getElementById(`label_${optionOrder}`);
+    labelToChange.innerText = value;
   }
-})();
-
-/**
- * Listening to remove option buttons /
- * Escuchando para eliminar botones de opción
- */
-(() => {
-  const options_list = document.querySelector(".options_list");
-
-  options_list.addEventListener("click", onRemoveBtnClick);
 
   function onRemoveBtnClick(e) {
     e.stopPropagation();
 
-    const splitted_id = e.target.id.split("_");
+    const splittedId = e.target.id.split("_");
 
-    if (!splitted_id.includes("icon") && !splitted_id.includes("btn")) {
+    if (!splittedId.includes("icon") && !splittedId.includes("btn")) {
       return;
     }
 
-    const option_id = splitted_id[splitted_id.length - 1];
+    const optionOrder = splittedId[splittedId.length - 1];
 
-    deleteOption(option_id);
+    deleteOption(optionOrder);
+    generateWheelSections(wheelDiv);
   }
-})();
-
-/**
- * Spin the wheel /
- * Gira la rueda
- */
-(() => {
-  const wheel = document.querySelector(".wheel");
-  const spin_btn = document.querySelector(".push_btn");
-  spin_btn.addEventListener("click", onSpinBtnClick);
 
   function onSpinBtnClick() {
-    const options_list = document.getElementsByClassName("option_item_input");
-    const dialog = document.querySelector(".result_dialog");
-    const resultText = document.querySelector(".result_text");
+    const optionInputsArray = document.getElementsByClassName("option_item_input");
 
-    let options_id_array = [];
-    for (const option of options_list) {
-      options_id_array.push(option.id);
+    let optionIdArray = [];
+    for (const option of optionInputsArray) {
+      optionIdArray.push(option.id);
     }
 
-    const selected_option_id = getRandomOption(options_id_array);
-    const selected_option_text = document.getElementById(selected_option_id).value;
+    const selectedOptionId = getRandomOption(optionIdArray);
+    const selectedOptionText = document.getElementById(selectedOptionId).value;
 
     // Calculate initial angle before spin
-    const computed_style = window.getComputedStyle(wheel);
-    const matrix = computed_style.transform;
-    const initial_angle = getRotationAngle(matrix);
+    const computedStyle = window.getComputedStyle(wheelDiv);
+    const matrix = computedStyle.transform;
+    const initialAngle = getRotationAngle(matrix);
 
     // Calculate terminal angle after spin to stop on selected option
-    const step = 360 / options_id_array.length;
-    const splitted_id = selected_option_id.split("_");
-    const order = splitted_id[splitted_id.length - 1];
-    const terminal_angle = 3600 + step / 2 - step * order + step;
+    const step = 360 / optionIdArray.length;
+    const splittedId = selectedOptionId.split("_");
+    const optionOrder = splittedId[splittedId.length - 1];
+    const terminalAngle = 3600 + step / 2 - step * optionOrder + step;
 
     // Set up initial styles before spin
-    wheel.style.animation = "none";
-    wheel.style.transform = `rotate(${initial_angle}deg)`;
+    wheelDiv.style.animation = "none";
+    wheelDiv.style.transform = `rotate(${initialAngle}deg)`;
 
     // Start spin
     setTimeout(() => {
-      wheel.style.transform = `rotate(${terminal_angle}deg)`;
+      wheelDiv.style.transform = `rotate(${terminalAngle}deg)`;
     }, 0);
 
     // After spin
     setTimeout(() => {
       // Show results
-      resultText.innerHTML = `Result: <b>${selected_option_text}</b>`;
+      resultTextP.innerHTML = `Result: <b>${selectedOptionText}</b>`;
       dialog.showModal();
-      dialog.addEventListener("click", onDialogClick);
 
       // Reset styles
-      wheel.style.transition = "none";
-      wheel.style.transform = `rotate(${step / 2 - step * order + step}deg)`;
+      wheelDiv.style.transition = "none";
+      wheelDiv.style.transform = `rotate(${step / 2 - step * optionOrder + step}deg)`;
     }, 6300);
     setTimeout(() => {
-      wheel.style.transition = "";
+      wheelDiv.style.transition = "";
     }, 0);
+  }
+
+  function onDialogClick(e) {
+    e.stopPropagation();
+
+    const targetId = e.target.id;
+
+    if (targetId === "copy_result_btn" || targetId === "copy_result_icon") {
+      copyResultToClipboard();
+    } else if (targetId === "close_dialog_btn") {
+      closeDialog();
+    }
+  }
+
+  function closeDialog() {
+    dialog.close();
+    wheelDiv.style.animation = "lazySpin 40s linear infinite";
   }
 })();
 
-function generateWheelSections() {
-  const options_array = document.getElementsByClassName("option_item_input");
-  const wheel = document.querySelector(".wheel");
+// const options_list = document.querySelector(".options_list");
+// let options_count = options_list.childElementCount;
 
-  if (!options_array.length) {
-    wheel.innerHTML = "";
-    wheel.style.background = "gray";
-    return;
-  }
+/**
+ * Function to add a new option /
+ * Función para agregar una nueva opción.
+ */
+// (() => {
+//   const options_list = document.querySelector(".options_list");
+//   const add_option_btn = document.querySelector(".add_option_btn");
 
-  let options = [];
-  for (const element of options_array) {
-    options.push(element.value);
-  }
+//   add_option_btn.addEventListener("click", onAddOptionBtnClick);
 
-  const options_count = options.length;
-  const step = 360 / options_count;
+//   function onAddOptionBtnClick(e) {
+//     e.stopPropagation();
 
-  let color_stops = [];
-  let sectors_markup = [];
+//     const newOptionInput = document.querySelector(".new_option_input");
+//     const newOptionText = newOptionInput.value;
 
-  for (let i = 0; i < options.length; i += 1) {
-    const color = getRandomHexColor();
-    color_stops.push(`${color} ${step * i}deg, ${color} ${step * (i + 1)}deg`);
+//     if (newOptionText.trim() !== "") {
+//       optionsCount += 1;
 
-    sectors_markup.push(
-      `<span id="label_${i + 1}" class="sector_label" style="transform: rotate(${
-        -90 - step / 2 + step * i
-      }deg)">${options[i]}</span>`
-    );
-  }
+//       options_list.insertAdjacentHTML(
+//         "beforeend",
+//         `<li class="option_item" id="option_item_${optionsCount}">
+//           <input type="text" id="option_input_${optionsCount}" class="option_item_input" value="${newOptionText}" />
 
-  wheel.style.background = `conic-gradient(${color_stops.join(",")})`;
-  wheel.style.transform = `rotate(${step / 2}deg)`;
+//           <button type="button" id="remove_option_btn_${optionsCount}" class="remove_icon_btn">
+//             <svg xmlns="http://www.w3.org/2000/svg" fill="#d32f2f" viewBox="0 0 32 32" id="remove_option_icon_${optionsCount}" class="remove_icon">
+//               <path d="M4 10v20c0 1.1 0.9 2 2 2h18c1.1 0 2-0.9 2-2v-20h-22zM10 28h-2v-14h2v14zM14 28h-2v-14h2v14zM18 28h-2v-14h2v14zM22 28h-2v-14h2v14z"></path>
+//               <path d="M26.5 4h-6.5v-2.5c0-0.825-0.675-1.5-1.5-1.5h-7c-0.825 0-1.5 0.675-1.5 1.5v2.5h-6.5c-0.825 0-1.5 0.675-1.5 1.5v2.5h26v-2.5c0-0.825-0.675-1.5-1.5-1.5zM18 4h-6v-1.975h6v1.975z"></path>
+//             </svg>
+//           </button>
+//         </li>`
+//       );
 
-  wheel.innerHTML = sectors_markup.join("");
-}
+//       newOptionInput.value = "";
 
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, 0)}`;
-}
+//       generateWheelSections(wheelDiv);
+//     }
+//   }
+// })();
 
-function deleteOption(id) {
-  const option_item = document.getElementById(`option_item_${id}`);
+/**
+ * Track input change /
+ * Seguimiento del cambio de entrada
+ */
+// (() => {
+//   const options_list = document.querySelector(".options_list");
 
-  option_item.remove();
+//   options_list.addEventListener("input", onInput);
 
-  generateWheelSections();
-}
+//   function onInput(e) {
+//     const { id, value } = e.target;
+//     const splittedId = id.split("_");
+//     const optionOrder = splittedId[splittedId.length - 1];
+//     const labelToChange = document.getElementById(`label_${optionOrder}`);
+//     labelToChange.innerText = value;
+//   }
+// })();
 
-function getRandomOption(options_id_array) {
-  return options_id_array[Math.round(Math.random() * (options_id_array.length - 1))];
-}
+/**
+ * Listening to remove option buttons /
+ * Escuchando para eliminar botones de opción
+ */
+// (() => {
+//   const options_list = document.querySelector(".options_list");
 
-function getRotationAngle(matrix) {
-  const values = matrix.split("(")[1].split(")")[0].split(",");
-  const a = values[0];
-  const b = values[1];
-  const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+//   options_list.addEventListener("click", onRemoveBtnClick);
 
-  return angle >= 0 ? angle : angle + 360;
-}
+//   function onRemoveBtnClick(e) {
+//     e.stopPropagation();
 
-function onDialogClick(e) {
-  e.stopPropagation();
+//     const splittedId = e.target.id.split("_");
 
-  const targetId = e.target.id;
+//     if (!splittedId.includes("icon") && !splittedId.includes("btn")) {
+//       return;
+//     }
 
-  if (targetId === "copy_result_btn" || targetId === "copy_result_icon") {
-    copyToClipboard();
-  }
+//     const optionOrder = splittedId[splittedId.length - 1];
 
-  if (targetId === "close_dialog_btn") {
-    closeDialog();
-  }
-}
+//     deleteOption(optionOrder);
+//   }
+// })();
 
-function closeDialog() {
-  const dialog = document.querySelector(".result_dialog");
-  const wheel = document.querySelector(".wheel");
+/**
+ * Spin the wheel /
+ * Gira la rueda
+ */
+// (() => {
+//   const wheel = document.querySelector(".wheel");
+//   const spin_btn = document.querySelector(".push_btn");
+//   spin_btn.addEventListener("click", onSpinBtnClick);
 
-  dialog.close();
+//   function onSpinBtnClick() {
+//     const optionInputsArray = document.getElementsByClassName("option_item_input");
 
-  wheel.style.animation = "lazySpin 40s linear infinite";
-}
+//     let options_id_array = [];
+//     for (const option of optionInputsArray) {
+//       options_id_array.push(option.id);
+//     }
 
-async function copyToClipboard() {
-  const result = document.querySelector(".result_text").innerText;
+//     const selectedOptionId = getRandomOption(options_id_array);
+//     const selectedOptionText = document.getElementById(selectedOptionId).value;
 
-  if (navigator.clipboard && window.isSecureContext) {
-    // If clipboard is not blocked / Si el portapapeles no está bloqueado
-    await navigator.clipboard.writeText(result);
-  } else {
-    // If clipboard is blocked / Si el portapapeles está bloqueado
-    const textArea = document.createElement("textarea");
-    textArea.value = result;
+//     // Calculate initial angle before spin
+//     const computedStyle = window.getComputedStyle(wheelDiv);
+//     const matrix = computedStyle.transform;
+//     const initialAngle = getRotationAngle(matrix);
 
-    textArea.style.position = "absolute";
-    textArea.style.left = "-999999px";
+//     // Calculate terminal angle after spin to stop on selected option
+//     const step = 360 / options_id_array.length;
+//     const splittedId = selectedOptionId.split("_");
+//     const optionOrder = splittedId[splittedId.length - 1];
+//     const terminalAngle = 3600 + step / 2 - step * optionOrder + step;
 
-    document.body.prepend(textArea);
-    textArea.select();
+//     // Set up initial styles before spin
+//     wheelDiv.style.animation = "none";
+//     wheelDiv.style.transform = `rotate(${initialAngle}deg)`;
 
-    try {
-      document.execCommand("copy");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      textArea.remove();
-    }
-  }
-}
+//     // Start spin
+//     setTimeout(() => {
+//       wheelDiv.style.transform = `rotate(${terminalAngle}deg)`;
+//     }, 0);
+
+//     // After spin
+//     setTimeout(() => {
+//       // Show results
+//       resultText.innerHTML = `Result: <b>${selectedOptionText}</b>`;
+//       dialog.showModal();
+//       dialog.addEventListener("click", onDialogClick);
+
+//       // Reset styles
+//       wheelDiv.style.transition = "none";
+//       wheelDiv.style.transform = `rotate(${step / 2 - step * optionOrder + step}deg)`;
+//     }, 6300);
+//     setTimeout(() => {
+//       wheelDiv.style.transition = "";
+//     }, 0);
+//   }
+// })();
+
+// function onDialogClick(e) {
+//   e.stopPropagation();
+
+//   const targetId = e.target.id;
+
+//   if (targetId === "copy_result_btn" || targetId === "copy_result_icon") {
+//     copyResultToClipboard();
+//   } else if (targetId === "close_dialog_btn") {
+//     closeDialog();
+//   }
+// }
+
+// function closeDialog() {
+//   dialog.close();
+//   wheelDiv.style.animation = "lazySpin 40s linear infinite";
+// }
