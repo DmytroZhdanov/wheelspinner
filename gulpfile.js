@@ -55,7 +55,7 @@ function jsTask() {
           [
             "@babel/env",
             {
-              modules: "commonjs",
+              modules: false,
             },
           ],
         ],
