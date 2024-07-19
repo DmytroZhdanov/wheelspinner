@@ -66,6 +66,18 @@ $options = [
 
       <button type="button" id="close_dialog_btn" class="close_dialog_btn">Close</button>
     </dialog>
+
+    <div class="social_share_container">
+      <img src="<?php echo get_template_directory_uri(); ?>/assets/icons/share.svg" alt="Share" class="social_icon share_icon">
+
+      <ul class="social_share_list">
+        <li><button type="button" id="x_button" class="social_btn"><img src="<?php echo get_template_directory_uri(); ?>/assets/icons/x.svg" alt="X (Twitter)" id="x_icon" class="social_icon"></button></li>
+        <li><button type="button" id="facebook_button" class="social_btn"><img src="<?php echo get_template_directory_uri(); ?>/assets/icons/facebook.svg" alt="Facebook" id="facebook_icon" class="social_icon"></button></li>
+        <li><button type="button" id="whatsapp_button" class="social_btn"><img src="<?php echo get_template_directory_uri(); ?>/assets/icons/whatsapp.svg" alt="WhatsApp" id="whatsapp_icon" class="social_icon"></button></li>
+        <li><button type="button" id="telegram_button" class="social_btn"><img src="<?php echo get_template_directory_uri(); ?>/assets/icons/telegram.svg" alt="Telegram" id="telegram_icon" class="social_icon"></button></li>
+        <li><button type="button" id="email_button" class="social_btn"><img src="<?php echo get_template_directory_uri(); ?>/assets/icons/email.svg" alt="Email" id="email_icon" class="social_icon"></button></li>
+      </ul>
+    </div>
   </main>
 </body>
 

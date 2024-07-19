@@ -5,12 +5,14 @@
   const spinBtn = document.querySelector(".push_btn");
   const dialog = document.querySelector(".result_dialog");
   const resultTextP = document.querySelector(".result_text");
+  const socialDiv = document.querySelector(".social_share_container");
 
   addOptionBtn.addEventListener("click", onAddOptionBtnClick);
   optionsUl.addEventListener("input", onInput);
   optionsUl.addEventListener("click", onRemoveBtnClick);
   spinBtn.addEventListener("click", onSpinBtnClick);
   dialog.addEventListener("click", onDialogClick);
+  socialDiv.addEventListener("click", onSocialClick);
 
   //* FUNCTIONS FOR EVENT LISTENERS / FUNCIONES PARA DETECTORES DE EVENTOS
 
@@ -155,6 +157,61 @@
     } else if (targetId === "close_dialog_btn") {
       dialog.close();
       wheelDiv.style.animation = "lazySpin 40s linear infinite";
+    }
+  }
+
+  /**
+   * Determine what social media user has choose and share current link accordingly /
+   * Determine qué usuario de redes sociales ha elegido y comparta el enlace actual en consecuencia
+   *
+   * @param {ClickEvent} e
+   */
+  function onSocialClick(e) {
+    e.stopPropagation();
+
+    const id = e.target.id.split("_")[0];
+    const message = "Check this out!";
+    const linkToShare = window.location.href;
+
+    switch (id) {
+      case "x":
+        window.open(
+          `https://twitter.com/intent/tweet?text=${message
+            .split(" ")
+            .join("%20")}%20${linkToShare}`,
+          "_blank"
+        );
+        break;
+
+      case "facebook":
+        window.open(
+          "https://www.facebook.com/dialog/share?app_id=145634995501895&display=popup&href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2F&redirect_uri=https%3A%2F%2Fdevelopers.facebook.com%2Ftools%2Fexplorer",
+          "_blank"
+        );
+        break;
+
+      case "whatsapp":
+        window.open(
+          `https://wa.me/?text=${message.split(" ").join("%20")}%20${linkToShare}`,
+          "_blank"
+        );
+        break;
+
+      case "telegram":
+        window.open(`https://t.me/share/url?url=${linkToShare}&text=${message}`, "_blank");
+        break;
+
+      case "email":
+        window.open(
+          `mailto:?subject=Awesome%20wheel%20spinner!&body=${message
+            .split(" ")
+            .join("%20")}%20${linkToShare}`,
+          "_blank"
+        );
+        break;
+
+      default:
+        break;
     }
   }
 

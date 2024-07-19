@@ -1,0 +1,69 @@
+@import "../utils/variables";
+
+.social_share_container {
+  position: fixed;
+  left: 20px;
+  top: 25vh;
+
+  border-radius: 4px;
+  background-color: white;
+
+  transform: translateY(-50%);
+
+  & .share_icon {
+    display: block;
+    margin: 0 auto;
+    padding: 4px;
+  }
+
+  & .social_share_list {
+    height: 0;
+    transform: scaleY(0);
+
+    transition: transform $transition_dur_and_func;
+  }
+
+  &:is(:hover, :focus) {
+    transform: translateY(-8%);
+
+    & .share_icon {
+      display: none;
+    }
+
+    & .social_share_list {
+      height: auto;
+      transform: scaleY(1);
+    }
+  }
+}
+
+.social_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 4px;
+
+  background-color: transparent;
+  border: none;
+
+  cursor: pointer;
+
+  &:is(:hover, :focus) .social_icon {
+    transform: scale(1.2);
+  }
+}
+
+.social_icon {
+  width: 28px;
+  height: 28px;
+
+  transition: transform $transition_dur_and_func;
+}
+
+@media screen and (min-width: 1024px) {
+  .social_icon {
+    width: 40px;
+    height: 40px;
+  }
+}
